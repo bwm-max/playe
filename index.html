@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  	<!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary">
+    <meta property="og:description" content="M3U8とMP4形式の動画プレーヤーに対応しています。" />
+    <meta property="og:image" content="/images/og_new_200_60.png" />
+    <meta property="og:image:width" content="250" />
+    <meta property="og:image:height" content="250" />
+    <meta name="format-detection" content="telephone=no">
+    <meta name="robots" content="noindex,nofollow,noarchive" />
+    <meta property="og:url" content="https://playe.cc/" />
+    <meta property="og:title" content="動画プレーヤー" />
+    <link rel="canonical" href="https://playe.cc/" />
+    <meta name="keywords" content="M3U8プレーヤー、MP4プレーヤー、オンライン動画再生対応" />
+    <meta name="description" content="M3U8とMP4形式の動画プレーヤーに対応しています。" />
+    <title>動画プレーヤー</title>
+    <meta name="keywords" content="M3U8 プレーヤー, MP4 プレーヤー, オンライン動画再生">
+    <meta name="description" content="M3U8とMP4形式の動画プレーヤーに対応しています。">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #ffffff;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        #video {
+            width: 100%;
+            height: 360px;
+            background: black;
+            margin-bottom: 20px;
+        }
+
+        .form {
+            display: flex;
+            margin-bottom: 20px;
+        }
+
+        .form input {
+            flex: 1;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-right: none;
+            outline: none;
+        }
+
+        .form button {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #007bff;
+            border: 1px solid #ccc;
+            color: white;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .form button:hover {
+            background: #0056b3;
+        }
+
+        .form button svg {
+            width: 24px;
+            height: 24px;
+            fill: white;
+        }
+		
+        .ad-banner {
+            text-align: center;
+            margin-bottom: 20px;
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            height: auto;
+            overflow: hidden;
+        }
+
+        .ad-banner img {
+            width: 100%;
+            max-width: 600px;
+            height: auto;
+            display: none;
+            cursor: pointer;
+        }
+
+        .ad-banner img.active {
+            display: block;
+        }
+    </style>
+	<style>
+    .ad-banner {
+        text-align: center;
+        margin-bottom: 20px;
+        position: relative;
+        width: 100%;
+        max-width: 600px;
+        height: auto;
+        overflow: hidden;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .ad-banner img {
+        width: 100%;
+        max-width: 600px;
+        height: auto;
+        display: none;
+        cursor: pointer;
+    }
+
+    .ad-banner img.active {
+        display: block; 
+    }
+</style>
+<style>
+    .ad-banner {
+        text-align: center;
+        margin-bottom: 20px;
+        position: relative;
+        width: 100%;
+        max-width: 600px;
+        height: auto;
+        overflow: hidden;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .ad-banner img {
+        width: 100%;
+        max-width: 600px;
+        height: auto;
+        display: none;
+        cursor: pointer;
+        border-radius: 8px; 
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); 
+    }
+
+    .ad-banner img.active {
+        display: block; 
+    }
+</style>	
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@1.4.0"></script>
+</head>
+
+<body>
+    <div class="container">
+        <h1 style="text-align: center; color: #333;">動画プレーヤー</h1>
+        <!-- Animated Ad Banner -->        <!-- 
+        <div class="ad-banner" id="ad-banner">
+            <a href="https://app.okazu.cc/" target="_blank">
+                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhCgo8CPDBHQMqB-5QDgLF-4ikWr3HTFwK39plUqKuYKAK7HQJYUeT3AAWsOpK82ZjcbktegeLh1Y0odY5X_XSFgk4kO1WNYHNMvAaY5jGRvULa5PqG2XLihGJfMi-VodRy5PMOKVPSsmTVmyd6p8qrH78DcUbLgCrpopt4whovlCVBCOBRmpM4w-gu5LM/s1600/1%E6%9C%8825%E6%97%A5_-14--9-_7rAFqzWbYc.gif" alt="Ad 1" class="active">
+            </a>
+            <a href="https://app.okazu.cc/" target="_blank">
+                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgqv2E1D96va5TgbWf9BhL_IEP0XYNnw_MnVNTPYX13x12SajFTvLHF3tgKWT7YkeQez2G6sYuboKb4WCryvsXbHpJkk1PBXe5xnjmjREsNU6UchJgm0-Hj8YFD509pA7tqwxgPC7k5Mv7Oq-ytXw1JgnQRYtaAH-NKEUP0ZsVs29cJ6FhxrrIt025YZ_g/s1600/1%E6%9C%8825%E6%97%A5_-14--11-_7akRBeO6Su.gif" alt="Ad 2">
+            </a>
+            <a href="https://app.okazu.cc/" target="_blank">
+                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhqd3dFO51SdbT0PbMbTC7X57lqeAZZG4gIkqNtVMV0JVfn_vBr2CzqilHVESIFQ0U4IBNFACnFeco_1Myn98VFFW66KCXOrDiHuV914j_XQqVm4e5YmpDiFRQPXSv1H2v5x8hQqnWAMeo5o11zoSC9Y0kHPMNU_5vV__GORGBCBpCh8LoUdcPsPooI2N0/s1600/1%E6%9C%8825%E6%97%A5_-14--8-_RMlkQ1j9Y4.gif" alt="Ad 3">
+            </a>
+            <a href="https://app.okazu.cc/" target="_blank">
+                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhxWk9EcMD35MdM5BiS1WuiXOeHLjMF4yaSR-dXQnQhNFd72lFz6CX5ru7uM6eh4xe4iKvAUorUEmMDtJLEZayQm-pPQMcQAKRm8Uy5lHMZtqWvejIN87x8C7UHXe8MN512xJLbrICJc9Ei4SrqtO2Nure5_IYtON1CmUbbySMgi5rrRDkeYZEou82tQCo/s1600/1%E6%9C%8825%E6%97%A5_-14--7-_gajbnYA_TD.gif" alt="Ad 4">
+            </a>
+            <a href="https://app.okazu.cc/" target="_blank">
+                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiVgQADQV7AaHsOdui4gny-HPOAflqWBsrrdG7NL1v-OlV-idi1DRwO-P5bcp7LSNCQTRoqdu58hlnZGvERea3FwDB7DDcKMNHV_msbwiWVgElTp9sXuaXgYynShBDbnsJlaBYFbnDfyHI6wCRS1ut99RH7GE_3dphSQZNg4NJSlN_y_P9I5k-eAHyir04/s1600/1%E6%9C%8825%E6%97%A5_-14--5-_hYXEA_1yzp.gif" alt="Ad 5">
+            </a>
+            <a href="https://app.okazu.cc/" target="_blank">
+                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjn4plqmGOXW9ideCXklMC8t-1BlMC3pKqAE3gY-9mmmopzo5RQaQ2yyq68i32BTMZDE1TInBKVoTkR16MBvPpAzAmV1Ar0DI4oUgHODr4AP_dEK0XBV37hNEiuGcWsbc0MCc8dm2Lvy6sMuZphgZfQtLtSGcRVgWRXg3tsM-zsh2El1jJ9JhoKZYupf7E/s1600/1%E6%9C%8825%E6%97%A5_-14--6-_QuipTbznBL.gif" alt="Ad 6">
+            </a>
+            <a href="https://app.okazu.cc/" target="_blank">
+                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgfSnQucHI0YaV08aTxrbot98FVuwMNjSKUiCCypFDLfUrWsN35WD8VbE_anqNGwaIuZH8y4AyKZza0j5iRmcUs4KJnM5bG3x8IGIMb2H5_svNr_6Rhvj-x2GFlYHVjZzhBGdfnq47vr2_ueVma3mV9YugmsXvVuBtyJCxdL8S-7-jiB5ciq23PvFwNy1A/s1600/1%E6%9C%8825%E6%97%A5_-14--10-_JTqRZrUb_A.gif" alt="Ad 7">
+            </a>
+            <a href="https://app.okazu.cc/" target="_blank">
+                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEifL8fnn0hQba_2yhSWNGT38AsaYc0i3hImiV0aSpw1fB2HlqTMsU-vigKwp3jWDteBUewTQGVX6QZXyQsOVesp8R2VVn0O-yOL_mpff902Xnnfv7BEC-2i6-UKy7ybmsvUeyp1yXkp9yIDR1yuzvhMK3Vu7fUdxWtg16oJnIBGWEiJ6t0sO2S3CtB2xSo/s1600/1%E6%9C%8825%E6%97%A5_-14--3-_7xnFhqYLmH.gif" alt="Ad 8">
+            </a>
+            <a href="https://app.okazu.cc/" target="_blank">
+                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgEjX0Q-7YNOpv37swLg67QHnufBjvjSopVoSG-OjIBXnzriPpRnZmTnLK6NWDbWjNaDHHmqekzA45KwO2ztCwN3G4l4cjakLLFjvZ9LO_Z1uWzdUDH3BEQfGK_wsW-XrXo3iGfv-1SOb_Ia-3Yl22kTXACoJ0s8rLGRmnu-miCCL1mdGjcqsDSGF-FjsQ/s1600/1%E6%9C%8825%E6%97%A5_-14--12-_gP6Cbu8ESs.gif" alt="Ad 9">
+            </a>
+            <a href="https://app.okazu.cc/" target="_blank">
+                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiVH_vsL5T3yrFqzAIaEhbFNpu_KQx9h4LK-KCZc0IKzPg56rXlRhn-ioBM-sHUxtRrIvNm9voDWmaf3KA_ecmUWqVJ9Edw1oTJDDZnqJKTA9qA3qpN34sixCv0EtjoTHvNF_qrHTinnVGlhNO9zxwZoBBZl5DyEUViHtcRj8NrPWmzcMuju2nX4Hh0URk/s1600/1%E6%9C%8825%E6%97%A5_-14--13-_Vb0txX5Hmg.gif" alt="Ad 10">
+            </a>
+        </div>  -->
+        <!-- 入力フォームとボタン -->
+        <div class="form">
+            <input type="text" id="url-input" placeholder="動画URLを入力してください">
+            <button onclick="play()">
+                <!-- 再生アイコン (SVG) -->
+                <svg viewBox="0 0 24 24">
+                    <path d="M8 5v14l11-7z"></path>
+                </svg>
+            </button>
+        </div>
+
+        <!-- 動画プレーヤー -->
+        <video id="video" controls></video>
+    </div>
+
+    <script>
+        const defaultUrl = "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8"; // デフォルトのURL
+
+        function getM3U8Url() {
+            const urlParams = window.location.search;
+            if (urlParams.startsWith('?url=')) {
+                return decodeURIComponent(urlParams.substring(5)); // "?url="を取り除いてURLを取得
+            }
+            return null;
+        }
+
+        // URL修正関数：ユーザーが入力したURLを修正
+        function fixUrl(inputUrl) {
+            if (inputUrl.startsWith('ttps://')) {
+                inputUrl = 'https://' + inputUrl.substring(7);
+            }
+            return inputUrl;
+        }
+
+        function initializePlayer(videoUrl) {
+            const video = document.getElementById('video');
+            const extension = videoUrl.split('.').pop().toLowerCase();
+
+            if (!videoUrl) {
+                alert('無効な動画URLです');
+                return;
+            }
+
+            // m3u8形式の動画を処理
+            if (extension === 'm3u8' || videoUrl.includes('.m3u8')) {
+                if (Hls.isSupported()) {
+                    const hls = new Hls();
+                    hls.loadSource(videoUrl);
+                    hls.attachMedia(video);
+                    hls.on(Hls.Events.MANIFEST_PARSED, function () {
+                        video.play();
+                    });
+                } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                    video.src = videoUrl;
+                    video.addEventListener('loadedmetadata', function () {
+                        video.play();
+                    });
+                } else {
+                    alert("HLS形式の再生はサポートされていません。");
+                }
+            }
+            // mp4形式の動画を処理
+            else if (extension === 'mp4' || videoUrl.includes('.mp4')) {
+                // クエリパラメーター付きの.mp4動画を処理
+                video.src = videoUrl;
+                video.addEventListener('loadedmetadata', function () {
+                    video.play();
+                });
+            } else {
+                alert('サポートされていない形式です');
+            }
+        }
+
+        function play() {
+            let urlInput = document.getElementById('url-input');
+            let videoUrl = urlInput.value.trim() || defaultUrl; // 入力が空の場合、デフォルトURLを使用
+            videoUrl = fixUrl(videoUrl); // URLの修正
+
+            // 入力フォームに修正したURLを反映
+            urlInput.value = videoUrl;
+
+            initializePlayer(videoUrl);
+
+            // 入力されたURLでアドレスバーを更新（デフォルトURLは更新しない）
+            if (urlInput.value.trim() !== "") {
+                window.history.pushState({}, '', `?url=${encodeURIComponent(videoUrl)}`);
+            }
+        }
+
+        // URLパラメーターを確認
+        const videoUrl = getM3U8Url();
+        if (videoUrl) {
+            // URLに動画アドレスが含まれている場合、プレーヤーを初期化し、入力フォームに表示
+            document.getElementById('url-input').value = videoUrl; // 入力フォームにURLを表示
+            initializePlayer(videoUrl); // 動画を再生
+        } else {
+            // パラメーターがない場合、デフォルトURLを設定
+            document.getElementById('url-input').value = defaultUrl;
+            initializePlayer(defaultUrl); // デフォルトURLで動画を再生
+        }
+		
+        // 広告スライダー
+        function startAdCarousel() {
+            const banners = document.querySelectorAll('.ad-banner img');
+            let currentIndex = 0;
+
+            setInterval(() => {
+                banners[currentIndex].classList.remove('active');
+                currentIndex = (currentIndex + 1) % banners.length;
+                banners[currentIndex].classList.add('active');
+            }, 3000); // 3秒ごとに広告を切り替える
+        }
+
+        // スライダー機能を起動する
+        startAdCarousel();
+    </script>
+        <!-- スライド5 - 画像広告とハイパーリンク -->
+     <script
+       id="SCSpotScript"
+       type="text/javascript"
+       src="https://creative.okazulive.cc/widgets/Spot/lib.js"
+       ></script>
+     <script type="text/javascript">
+     const spot = new StripchatSpot({"autoplay":"all","hideButton":1,"closeButtonDelay":0,"animate":1,"width":275,"height":90,"targetDomain":"okazulive.cc","userId":   "29a6fbc0cc90562e74d565eebc872d2e0310a054583e591dfb25304ab8fa358c"});
+      spot.mount(document.body)
+    </script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-QTWR0BQEZE"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-QTWR0BQEZE');
+</script>
+
+</body>
+
+</html>
